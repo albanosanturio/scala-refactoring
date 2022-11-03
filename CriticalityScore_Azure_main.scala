@@ -1,7 +1,7 @@
 %run AsstMgmt/CriticalityScoreTT
 %run AsstMgmt/Utils
-
-//adding comments
+//other comment
+//adding commentshh
 
 import com.typesafe.config.ConfigFactory
 import org.apache.spark.sql.SparkSession
