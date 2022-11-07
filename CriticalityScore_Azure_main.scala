@@ -2,6 +2,7 @@
 %run AsstMgmt/Utils
 //other comment
 //adding commentshh
+//comment remote
 
 import com.typesafe.config.ConfigFactory
 import org.apache.spark.sql.SparkSession
