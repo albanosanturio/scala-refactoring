@@ -1,4 +1,3 @@
-// transformations file
   package com.avangrid
 
   import com.typesafe.config.ConfigFactory
