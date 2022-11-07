@@ -80,15 +80,15 @@
         col("file_month"))
 
       val regulatoryTempFinal101 = regulatoryTempFinal100
-        .withColumn("LOAD_SERVING_CAPABILITY_SCORE", when($"LOW_LOAD_SERVING" === 1, 1)
-        .when($"MEDIUM_LOAD_SERVING" === 2, 2)
-        .when($"HIGH_LOAD_SERVING" === 3, 3)
-        .when($"VERY_HIGH_LOAD_SERVING" === 4, 4)
+        .withColumn("LOAD_SERVING_CAPABILITY_SCORE", when(col("LOW_LOAD_SERVING") === 1, 1)
+        .when(col("MEDIUM_LOAD_SERVING") === 2, 2)
+        .when(col("HIGH_LOAD_SERVING") === 3, 3)
+        .when(col("VERY_HIGH_LOAD_SERVING") === 4, 4)
         .otherwise(1))
-        .withColumn("REGULATORY_COMPLIANCE_SCORE", when($"LOW_REGULATORY_COMPLIANCE" === 1, 1)
-        .when($"MEDIUM_REGULATORY_COMPLIANCE" === 2, 2)
-        .when($"HIGH_REGULATORY_COMPLIANCE" === 3, 3)
-        .when($"VERY_HIGH_REGULATORY_COMPLIANCE" === 4, 4)
+        .withColumn("REGULATORY_COMPLIANCE_SCORE", when(col("LOW_REGULATORY_COMPLIANCE") === 1, 1)
+        .when(col("MEDIUM_REGULATORY_COMPLIANCE") === 2, 2)
+        .when(col("HIGH_REGULATORY_COMPLIANCE") === 3, 3)
+        .when(col("VERY_HIGH_REGULATORY_COMPLIANCE") === 4, 4)
         .otherwise(1))
   
       val regulatoryTempFinal102 = regulatoryTempFinal101
@@ -113,8 +113,8 @@
         regulatoryTempFinal101("REGULATORY_COMPLIANCE_SCORE"),
 	      col("current_date").alias("EXECUTION_DATE"))
   
-      val regulatoryTempFinal103 = regulatoryTempFinal102.na.fill(1, Array("LOAD_SERVING_CAPABILITY_SCORE", "REGULATORY_COMPLIANCE_SCORE"))
-      loadTable(List("loadServingRegulatoryComplianceL1","dimCharacteristicsL1"), "factLoadServingRegulatoryComplianceL2" )
+      regulatoryTempFinal102.na.fill(1, Array("LOAD_SERVING_CAPABILITY_SCORE", "REGULATORY_COMPLIANCE_SCORE"))
+      
    
     }
   }
@@ -135,7 +135,7 @@
           .withColumn("CUSTOMER_IMPACT", when(col("SUM_OF_CUSTOMERS") === 0, 1).when(col("SUM_OF_CUSTOMERS") <= 499, 2)
           .when(col("SUM_OF_CUSTOMERS") <= 5000, 3).when(col("SUM_OF_CUSTOMERS") > 5000, 4))
     
-        val customerTempFinal102 = customerTempFinal101
+        customerTempFinal101
           .join(dimCharacteristicsL1, Seq("EQUIP"), "right")
           .select(
           dimCharacteristicsL1("EQUIP"),
@@ -181,7 +181,7 @@
                                           .withColumn("QUALITY_OF_SUPPLY_SCORE", greatest("CUSTOMER_IMPACT", "LOAD_SERVING_CAPABILITY_SCORE",
                                                       "SYSTEM_RESTORATION", "REGULATORY_COMPLIANCE_SCORE", "REPUTATION")
                                                       )
-    val qualitySupp101= qualitySupp.select(
+    qualitySupp.select(
       col("EQUIP"),
       col("SERIAL_NUM"),
       col("SYSTEM_RESTORATION"),
@@ -218,13 +218,13 @@
       )
 
       val critScore = criticalitySapTempFinal.join(criticalityQualityTempFinal, Seq("EQUIP"), "left")
-                          .withColumn("CRITICALITY_SCORE", when($"SAFETY".isNotNull, $"SAFETY").otherwise(0) * 0.25
-                          + when($"ENVIRONMENTAL".isNotNull, $"ENVIRONMENTAL").otherwise(0) * 0.15
-                          + when($"QUALITY_OF_SUPPLY_SCORE".isNotNull, $"QUALITY_OF_SUPPLY_SCORE").otherwise(0) * 0.3 + $"FINANCIAL" * 0.3)
+                          .withColumn("CRITICALITY_SCORE", when(col("SAFETY").isNotNull, col("SAFETY")).otherwise(0) * 0.25
+                          + when(col("ENVIRONMENTAL").isNotNull, col("ENVIRONMENTAL")).otherwise(0) * 0.15
+                          + when(col("QUALITY_OF_SUPPLY_SCORE").isNotNull, col("QUALITY_OF_SUPPLY_SCORE")).otherwise(0) * 0.3 + col("FINANCIAL") * 0.3)
 
       val critScore2 = critScore.withColumn("CRITICALITY_SCORE", round(col("CRITICALITY_SCORE"), 1))
 
-      val critScore3 = critScore2.select(
+      critScore2.select(
         col("EQUIP"),
         col("SAFETY"),
         col("ENVIRONMENTAL"),

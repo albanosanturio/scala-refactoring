@@ -25,7 +25,8 @@ object CriticalityScore {
     loadFromDataStore(inputLoadDimCustomerCountL1, outputLoadDimCustomerCountL1, dimCustomerCountL1)
     
 	  val inputLoadServingRegulatoryComplianceL1 = List(
-      Table("load_serving_regulatory_compliance", YearMonth()))
+      Table("load_serving_regulatory_compliance", YearMonth())
+    )
     
 	  val outputLoadServingRegulatoryComplianceL1 = Table("dim_load_serving_regulatory_compliance_l1", YearMonth())
     loadFromDataStore(inputLoadServingRegulatoryComplianceL1, outputLoadServingRegulatoryComplianceL1, dimLoadServingRegulatoryComplianceL1)
@@ -36,7 +37,7 @@ object CriticalityScore {
 	  )
 	
 	  val outputFactLoadServingRegulatoryComplianceL2 = Table("fact_load_serving_regulatory_compliance_l2", YearMonth())
-    loadFromDataStore(inputFactLoadServingRegulatoryComplianceL2, outputFactLoadServingRegulatoryComplianceL2, factLoadServingRegulatoryComplianceL2)
+    loadFromDB(inputFactLoadServingRegulatoryComplianceL2, outputFactLoadServingRegulatoryComplianceL2, factLoadServingRegulatoryComplianceL2)
 
 	  val inputFactCustomerCountL2 = List(
       Table("dim_customer_count_l1", YearMonth()),
@@ -44,7 +45,7 @@ object CriticalityScore {
 	  )
 	
 	val outputFactCustomerCountL2 = Table("fact_customer_count_l2", YearMonth())
-    loadFromDataStore(inputFactCustomerCountL2, outputFactCustomerCountL2, loadFactCustomerCountL2)
+    loadFromDB(inputFactCustomerCountL2, outputFactCustomerCountL2, loadFactCustomerCountL2)
 	 	
   val inputFactQualityOfSupplyL3 = List(
       Table("fact_characteristics_l2", YearMonth()),
@@ -53,7 +54,7 @@ object CriticalityScore {
 	  )
 	
 	val outputFactQualityOfSupplyL3 = Table("fact_quality_of_supply_l3", ExecutionDate())
-    loadFromDataStore(inputFactCustomerCountL2, outputFactCustomerCountL2, loadFactQualityOfSupplyL3)
+    loadFromDB(inputFactCustomerCountL2, outputFactCustomerCountL2, loadFactQualityOfSupplyL3)
 
 	val inputFactCriticalityscoreL4 = List(
       Table("fact_characteristics_l2", ExecutionDate()),
@@ -61,7 +62,7 @@ object CriticalityScore {
 	  )
 	
 	val outputFactQualityOfSupplyL3 = Table("fact_criticalityscore_l4", ExecutionDate())
-    loadFromDataStore(inputFactCriticalityscoreL4, outputFactQualityOfSupplyL3, loadFactCriticalityscoreL4) 
+    loadFromDB(inputFactCriticalityscoreL4, outputFactQualityOfSupplyL3, loadFactCriticalityscoreL4) 
   
     spark.stop()
   }
