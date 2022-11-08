@@ -1,13 +1,10 @@
 %run AsstMgmt/CriticalityScoreTT
 %run AsstMgmt/Utils
-//other comment
-//adding commentshh
-//comment remote
-//comment local
+
 
 import com.typesafe.config.ConfigFactory
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.functions._
+
 
 object CriticalityScore {
 
